@@ -11,17 +11,15 @@
 <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
 <style>
 :root{
-  --ink:#141414; --paper:#fff7e6; --card:#ffffff; --muted:#5b5b5b;
-  --todo:#ffe08a; --progress:#9ad1ff; --testing:#ffb3d9; --done:#a8f0c6;
+  --ink:#1d1d1f; --paper:#f5f4f0; --card:#ffffff; --muted:#5b5b5b;
+  --todo:#e9b949; --progress:#5b8def; --testing:#c26fd1; --done:#3fa877;
   --accent:#ff5c8a; --shadow:4px 4px 0 var(--ink); --r:14px;
 }
 *{box-sizing:border-box}
 html,body{margin:0}
 body{
   font-family:"Space Grotesk",system-ui,sans-serif; color:var(--ink);
-  background:var(--paper);
-  background-image:radial-gradient(#e8d9b8 1.2px,transparent 1.2px);
-  background-size:18px 18px; min-height:100vh;
+  background:#f5f4f0; min-height:100vh;
 }
 button,input,select,textarea{font:inherit;color:inherit}
 button{cursor:pointer}
@@ -33,16 +31,16 @@ button{cursor:pointer}
 header{
   display:flex;align-items:center;gap:12px;flex-wrap:wrap;
   padding:14px 16px;border-bottom:3px solid var(--ink);
-  background:linear-gradient(90deg,#ff5c8a,#ff8a00 30%,#ffd23f 55%,#3dd6a3 78%,#3d7bff);
+  background:#fff;
 }
 .logo{font-family:Bungee,sans-serif;font-size:26px;letter-spacing:1px;
   background:var(--card);padding:4px 12px;border:3px solid var(--ink);border-radius:10px;
-  box-shadow:var(--shadow);transform:rotate(-2deg)}
+  box-shadow:var(--shadow)}
 .logo span{color:var(--accent)}
 .spacer{flex:1}
 .pill{background:var(--card);border:3px solid var(--ink);border-radius:999px;
   padding:6px 12px;font-weight:700;font-size:13px;box-shadow:var(--shadow)}
-.pill.ok{background:#c9ffe0}.pill.warn{background:#fff1a8}.pill.err{background:#ffc2c2}
+.pill.ok{background:#eaf6ef}.pill.warn{background:#faf3df}.pill.err{background:#fbe9e9}
 .btn{background:var(--card);border:3px solid var(--ink);border-radius:10px;
   padding:7px 12px;font-weight:700;box-shadow:var(--shadow);transition:transform .08s,box-shadow .08s}
 .btn:hover{transform:translate(-1px,-1px);box-shadow:5px 5px 0 var(--ink)}
@@ -69,7 +67,7 @@ main{padding:16px;max-width:1500px;margin:0 auto}
 .xpbar i{display:block;height:100%;background:repeating-linear-gradient(45deg,var(--pc),var(--pc) 8px,#ffffff66 8px,#ffffff66 14px);transition:width .6s}
 .xpline{display:flex;justify-content:space-between;font-size:12px;margin-top:4px;font-weight:700}
 .badges{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;min-height:28px}
-.badge{font-size:18px;display:inline-grid;place-items:center;color:var(--bc);background:#fff6c7;border:2px solid var(--ink);border-radius:8px;padding:1px 5px;cursor:help}
+.badge{font-size:18px;display:inline-grid;place-items:center;color:var(--bc);background:#f4f4f1;border:2px solid var(--ink);border-radius:8px;padding:1px 5px;cursor:help}
 .badge.locked{filter:grayscale(1);opacity:.25}
 
 /* epics */
@@ -81,19 +79,20 @@ main{padding:16px;max-width:1500px;margin:0 auto}
 .epic .pct{margin-left:auto;font-size:12px}
 .epic .bar{height:7px;border-radius:999px;background:#eee;border:2px solid var(--ink);overflow:hidden}
 .epic .bar i{display:block;height:100%;background:var(--ec)}
-.epic.active{background:var(--ec);color:#fff;transform:translate(-1px,-1px);box-shadow:5px 5px 0 var(--ink)}
-.epic.active .bar{background:#ffffff55}.epic.active .bar i{background:#fff}
+.epic.active{background:var(--ink);color:#fff;transform:translate(-1px,-1px);box-shadow:5px 5px 0 var(--ink)}
+.epic.active .bar{background:#ffffff33}
 
 /* board */
 .board{display:grid;grid-template-columns:repeat(4,minmax(260px,1fr));gap:14px;overflow-x:auto;padding-bottom:8px}
-.col{border:3px solid var(--ink);border-radius:var(--r);background:var(--cc);box-shadow:var(--shadow);
+.col{border:3px solid var(--ink);border-top:8px solid var(--cc);border-radius:var(--r);background:#fbfbf9;box-shadow:var(--shadow);
   display:flex;flex-direction:column;min-height:420px}
 .col h2{margin:0;padding:10px 12px;font-family:Bungee;font-size:17px;display:flex;align-items:center;gap:8px;
-  border-bottom:3px solid var(--ink)}
+  border-bottom:2px solid #e4e2dc}
+.col h2 .ic{color:var(--cc)}
 .count{margin-left:auto;background:var(--ink);color:#fff;border-radius:999px;font-size:12px;padding:2px 9px;font-family:"Space Grotesk";font-weight:700}
 .drop{flex:1;padding:10px;display:flex;flex-direction:column;gap:10px;transition:background .15s}
-.drop.over{background:#ffffff88;outline:3px dashed var(--ink);outline-offset:-8px;border-radius:10px}
-.add{margin:0 10px 10px;border:3px dashed var(--ink);background:#ffffff66;border-radius:10px;padding:8px;font-weight:700}
+.drop.over{background:#efeee9;outline:3px dashed var(--ink);outline-offset:-8px;border-radius:10px}
+.add{margin:0 10px 10px;border:2px dashed #b9b6ae;background:transparent;border-radius:10px;padding:8px;font-weight:700}
 
 .card{background:var(--card);border:3px solid var(--ink);border-radius:12px;box-shadow:3px 3px 0 var(--ink);
   padding:10px 10px 8px 16px;position:relative;cursor:grab;transition:transform .1s}
@@ -101,7 +100,8 @@ main{padding:16px;max-width:1500px;margin:0 auto}
 .card.dragging{opacity:.4}
 .card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:8px;background:var(--ec);border-radius:9px 0 0 9px;border-right:2px solid var(--ink)}
 .card .tag{font-size:11px;font-weight:700;display:inline-flex;gap:4px;align-items:center;
-  background:var(--ec);color:#fff;border:2px solid var(--ink);border-radius:6px;padding:0 6px}
+  background:#fff;color:#333;border:2px solid #d9d6cf;border-radius:6px;padding:0 6px}
+.card .tag .ic{color:var(--ec)}
 .card .id{font-size:11px;color:var(--muted);margin-left:6px}
 .card h3{margin:6px 0 4px;font-size:15px;line-height:1.25}
 .card p{margin:0;font-size:12.5px;color:#333;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
@@ -117,7 +117,7 @@ main{padding:16px;max-width:1500px;margin:0 auto}
 /* dialog */
 dialog{border:3px solid var(--ink);border-radius:16px;box-shadow:8px 8px 0 var(--ink);padding:0;width:min(520px,94vw);background:var(--card)}
 dialog::backdrop{background:#14141466}
-.dlg-h{padding:12px 16px;border-bottom:3px solid var(--ink);font-family:Bungee;font-size:18px;background:var(--todo)}
+.dlg-h{padding:12px 16px;border-bottom:3px solid var(--ink);font-family:Bungee;font-size:18px;background:#f3f2ee}
 .dlg-b{padding:14px 16px;display:grid;gap:10px}
 .dlg-b label{font-weight:700;font-size:13px;display:grid;gap:4px}
 .dlg-b input,.dlg-b select,.dlg-b textarea{border:3px solid var(--ink);border-radius:10px;padding:8px;background:#fffdf7;width:100%}
@@ -130,7 +130,7 @@ dialog::backdrop{background:#14141466}
 /* toasts + confetti */
 #toasts{position:fixed;right:16px;bottom:16px;display:grid;gap:8px;z-index:50}
 .toast{background:var(--card);border:3px solid var(--ink);border-radius:12px;box-shadow:var(--shadow);padding:10px 14px;font-weight:700;max-width:340px;animation:pop .25s}
-.toast.big{font-family:Bungee;font-size:18px;background:var(--done)}
+.toast.big{font-family:Bungee;font-size:18px}
 @keyframes pop{from{transform:scale(.8);opacity:0}}
 #confetti{position:fixed;inset:0;pointer-events:none;z-index:40}
 
@@ -177,12 +177,13 @@ dialog::backdrop{background:#14141466}
 
 <dialog id="tokdlg">
   <form method="dialog">
-    <div class="dlg-h" style="background:var(--progress)">GitHub token</div>
+    <div class="dlg-h">GitHub token</div>
     <div class="dlg-b">
       <p class="hint">Anyone can view the board. To move or edit tickets, paste a
         <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">fine-grained token</a>
         with <b>Contents: read &amp; write</b> on <b>ANIRUK007/race-board</b> only.
         It is stored in this browser only and sent only to api.github.com.</p>
+      <p class="hint" id="tok-why" style="font-weight:700"></p>
       <label>Token <input id="tok" type="password" autocomplete="off" placeholder="github_pat_…"></label>
     </div>
     <div class="dlg-f">
@@ -251,7 +252,7 @@ const BADGES = [
   {id:"streak", icon:"flame",  c:"#f97316", name:"On Fire",      hint:"3-day completion streak"},
 ];
 
-let state = null, sha = null, etag = null, filter = null, editing = null;
+let state = null, sha = null, etag = null, filter = null, editing = null, pending = null;
 const $ = s => document.querySelector(s);
 const token = () => { try { return localStorage.getItem("rb_token") || ""; } catch { return ""; } };
 
@@ -295,7 +296,11 @@ async function load(silent) {
 // Apply an operation and commit it. On a conflict (someone else saved first)
 // refetch and re-apply the same operation, so moves never overwrite each other.
 async function commit(op, message) {
-  if (!token()) { toast("Add your GitHub token (Token button) to make moves"); return false; }
+  if (!token()) {
+    pending = {op, message};
+    $("#tok").value = ""; $("#tok-why").textContent = "Add your token to save this change. It will be applied right after.";
+    $("#tokdlg").showModal(); return false;
+  }
   const before = levels();
   op(state); render();
   setSync("saving…", "warn");
@@ -426,7 +431,7 @@ function renderBoard() {
       const who = u ? `<span class="who" style="--pc:${safeColor(u.color)}">${ic("bot")} ${esc(u.name)}</span>`
                     : `<span class="who none">unassigned</span>`;
       const stamp = t.completedAt ? `${ic("check")} ${ago(t.completedAt)}` : t.committedAt ? `${ic("clock")} ${ago(t.committedAt)}` : "";
-      return `<article class="card" draggable="${!!token()}" data-id="${esc(t.id)}" style="--ec:${safeColor(e.color)}">
+      return `<article class="card" draggable="true" data-id="${esc(t.id)}" style="--ec:${safeColor(e.color)}">
         <span class="tag">${ic(e.icon)} ${esc(e.title)}</span><span class="id mono">${esc(t.id)}</span>
         <h3>${esc(t.title)}</h3>${t.desc ? `<p>${esc(t.desc)}</p>` : ""}
         <div class="foot">${who}<span class="stamp">${stamp}</span>
@@ -502,9 +507,6 @@ function openTicket(id) {
   const fmt = iso => iso ? new Date(iso).toLocaleString() : "—";
   $("#f-times").innerHTML = id ? `<span>${ic("clock")} Committed: <b>${esc(fmt(t.committedAt))}</b></span><span>${ic("check")} Completed: <b>${esc(fmt(t.completedAt))}</b></span>` : "";
   $("#f-delete").style.display = id ? "" : "none";
-  const ro = !token();
-  [...f.elements].forEach(el => { if (["INPUT", "TEXTAREA", "SELECT"].includes(el.tagName)) el.disabled = ro; });
-  f.querySelector('[value="save"]').style.display = ro ? "none" : "";
   $("#dlg").showModal();
 }
 $("#dlg").addEventListener("close", () => {
@@ -527,12 +529,14 @@ $("#f-delete").addEventListener("click", () => {
 });
 
 // --- token dialog ---
-$("#settings").addEventListener("click", () => { $("#tok").value = ""; $("#tokdlg").showModal(); });
+$("#settings").addEventListener("click", () => { $("#tok").value = ""; $("#tok-why").textContent = ""; $("#tokdlg").showModal(); });
 $("#tokdlg").addEventListener("close", () => {
+  const p = pending; pending = null;
   if ($("#tokdlg").returnValue !== "save") return;
   const v = $("#tok").value.trim(); if (!v) return;
   try { localStorage.setItem("rb_token", v); } catch {}
-  toast("Token saved — you can make moves now"); load(false).catch(err => toast(err.message));
+  toast("Token saved");
+  load(false).then(() => p && commit(p.op, p.message)).catch(err => toast(err.message));
 });
 $("#tok-clear").addEventListener("click", () => {
   try { localStorage.removeItem("rb_token"); } catch {}
