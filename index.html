@@ -241,12 +241,17 @@ function setSync(text, kind) { const el = $("#sync"); el.textContent = text; el.
 async function load() {
   let saved = null;
   try { saved = JSON.parse(localStorage.getItem(STORE) || "null"); } catch {}
-  if (saved && saved.tickets) state = saved;
-  else {
-    const r = await fetch("board.json", {cache: "no-store"});
-    if (!r.ok) throw new Error(`board.json ${r.status}`);
-    state = await r.json();
-  }
+  const r = await fetch("board.json", {cache: "no-store"});
+  if (!r.ok) throw new Error(`board.json ${r.status}`);
+  const base = await r.json();
+  // Players and epics are shared and always come from board.json. Ticket moves
+  // live in this browser; tickets added to board.json later are merged in,
+  // unless this browser deleted them.
+  if (saved && saved.tickets) {
+    const have = new Set(saved.tickets.map(t => t.id)), gone = new Set(saved.deleted || []);
+    state = {...base, deleted: saved.deleted || [],
+             tickets: [...saved.tickets, ...base.tickets.filter(t => !have.has(t.id) && !gone.has(t.id))]};
+  } else state = {...base, deleted: []};
   render(); setSync("saved", "ok");
 }
 
@@ -464,7 +469,7 @@ $("#dlg").addEventListener("close", () => {
 });
 $("#f-delete").addEventListener("click", () => {
   const id = editing; if (!id || !confirm(`Delete ${id}? This can't be undone from the board.`)) return;
-  $("#dlg").close(); commit(s => { s.tickets = s.tickets.filter(t => t.id !== id); }, `board: delete ${id}`);
+  $("#dlg").close(); commit(s => { s.tickets = s.tickets.filter(t => t.id !== id); s.deleted = [...(s.deleted || []), id]; }, `board: delete ${id}`);
 });
 
 // --- toasts + confetti ---
