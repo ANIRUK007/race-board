@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src https://api.github.com; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:">
 <title>Race Board</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ff5c8a' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 8V4H8'/%3E%3Crect width='16' height='12' x='4' y='8' rx='2'/%3E%3Cpath d='M2 14h2M20 14h2M15 13v2M9 13v2'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -146,8 +146,6 @@ dialog::backdrop{background:#14141466}
   <div class="logo">RACE<span>//</span>BOARD</div>
   <div class="spacer"></div>
   <span id="sync" class="pill warn">loading…</span>
-  <button class="btn" id="refresh" title="Reload from GitHub" aria-label="Reload"></button>
-  <button class="btn" id="settings">Token</button>
 </header>
 
 <main>
@@ -171,26 +169,6 @@ dialog::backdrop{background:#14141466}
       <span class="spacer"></span>
       <button class="btn" value="cancel" formnovalidate>Cancel</button>
       <button class="btn primary" value="save">Save</button>
-    </div>
-  </form>
-</dialog>
-
-<dialog id="tokdlg">
-  <form method="dialog">
-    <div class="dlg-h">GitHub token</div>
-    <div class="dlg-b">
-      <p class="hint">Anyone can view the board. To move or edit tickets, paste a
-        <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">fine-grained token</a>
-        with <b>Contents: read &amp; write</b> on <b>ANIRUK007/race-board</b> only.
-        It is stored in this browser only and sent only to api.github.com.</p>
-      <p class="hint" id="tok-why" style="font-weight:700"></p>
-      <label>Token <input id="tok" type="password" autocomplete="off" placeholder="github_pat_…"></label>
-    </div>
-    <div class="dlg-f">
-      <button class="btn danger" id="tok-clear" type="button">Forget</button>
-      <span class="spacer"></span>
-      <button class="btn" value="cancel" formnovalidate>Cancel</button>
-      <button class="btn primary" id="tok-save" value="save">Save</button>
     </div>
   </form>
 </dialog>
@@ -230,8 +208,7 @@ const ICONS = {
   eye:'<path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"/><circle cx="12" cy="12" r="3"/>',
 };
 const ic = (name, cls = "") => `<svg class="ic ${cls}" viewBox="0 0 24 24" aria-hidden="true">${ICONS[name] || ICONS.file}</svg>`;
-const OWNER = "ANIRUK007", REPO = "race-board", FILE = "board.json", BRANCH = "main";
-const API = `https://api.github.com/repos/${OWNER}/${REPO}/contents/${FILE}`;
+const STORE = "rb_board_v1";
 
 const COLS = [
   {id:"todo",     name:"TO-DO",       icon:"clipboard", c:"var(--todo)"},
@@ -252,74 +229,37 @@ const BADGES = [
   {id:"streak", icon:"flame",  c:"#f97316", name:"On Fire",      hint:"3-day completion streak"},
 ];
 
-let state = null, sha = null, etag = null, filter = null, editing = null, pending = null;
+let state = null, filter = null, editing = null;
 const $ = s => document.querySelector(s);
-const token = () => { try { return localStorage.getItem("rb_token") || ""; } catch { return ""; } };
 
 // --- safe rendering: ticket text comes from a shared file, never trust it ---
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const safeColor = c => /^#[0-9a-fA-F]{3,8}$/.test(c || "") ? c : "#999999";
 
-// --- utf-8 safe base64 ---
-function b64decode(s) {
-  const bin = atob(s.replace(/\n/g, ""));
-  return new TextDecoder().decode(Uint8Array.from(bin, ch => ch.charCodeAt(0)));
-}
-function b64encode(str) {
-  const bytes = new TextEncoder().encode(str); let bin = "";
-  for (let i = 0; i < bytes.length; i += 0x8000) bin += String.fromCharCode.apply(null, bytes.subarray(i, i + 0x8000));
-  return btoa(bin);
-}
-
-function headers() {
-  const h = {"Accept": "application/vnd.github+json", "X-GitHub-Api-Version": "2022-11-28"};
-  if (token()) h.Authorization = `Bearer ${token()}`;
-  return h;
-}
-
 function setSync(text, kind) { const el = $("#sync"); el.textContent = text; el.className = `pill ${kind}`; }
 
-async function load(silent) {
-  const h = headers(); if (etag && silent) h["If-None-Match"] = etag;
-  const r = await fetch(`${API}?ref=${BRANCH}`, {headers: h, cache: "no-store"});
-  if (r.status === 304) return false;
-  if (!r.ok) throw new Error(`GitHub ${r.status}`);
-  const j = await r.json();
-  etag = r.headers.get("ETag");
-  sha = j.sha;
-  state = JSON.parse(b64decode(j.content));
-  render();
-  setSync(token() ? "synced" : "view only", token() ? "ok" : "warn");
-  return true;
+async function load() {
+  let saved = null;
+  try { saved = JSON.parse(localStorage.getItem(STORE) || "null"); } catch {}
+  if (saved && saved.tickets) state = saved;
+  else {
+    const r = await fetch("board.json", {cache: "no-store"});
+    if (!r.ok) throw new Error(`board.json ${r.status}`);
+    state = await r.json();
+  }
+  render(); setSync("saved", "ok");
 }
 
 // Apply an operation and commit it. On a conflict (someone else saved first)
 // refetch and re-apply the same operation, so moves never overwrite each other.
-async function commit(op, message) {
-  if (!token()) {
-    pending = {op, message};
-    $("#tok").value = ""; $("#tok-why").textContent = "Add your token to save this change. It will be applied right after.";
-    $("#tokdlg").showModal(); return false;
-  }
+// Apply a change, save it in this browser, and re-score.
+async function commit(op) {
   const before = levels();
   op(state); render();
-  setSync("saving…", "warn");
-  for (let attempt = 0; attempt < 3; attempt++) {
-    const body = JSON.stringify({message, branch: BRANCH, sha,
-      content: b64encode(JSON.stringify(state, null, 2) + "\n")});
-    const r = await fetch(API, {method: "PUT", headers: {...headers(), "Content-Type": "application/json"}, body});
-    if (r.ok) {
-      const j = await r.json(); sha = j.content.sha; etag = null;
-      setSync("synced", "ok"); celebrateLevels(before); return true;
-    }
-    if (r.status === 409 || r.status === 422) {            // stale sha
-      await load(false); op(state); render(); continue;
-    }
-    setSync("save failed", "err");
-    toast(r.status === 401 || r.status === 403 ? "Token rejected — check its permissions" : `Save failed (${r.status})`);
-    await load(false); return false;
-  }
-  setSync("conflict", "err"); toast("Couldn't save — board busy, try again"); await load(false); return false;
+  try { localStorage.setItem(STORE, JSON.stringify(state)); setSync("saved", "ok"); }
+  catch { setSync("not saved", "err"); toast("This browser blocked saving — changes will be lost on reload"); }
+  celebrateLevels(before);
+  return true;
 }
 
 // --- gamification (all derived from tickets, nothing extra stored) ---
@@ -377,7 +317,6 @@ function celebrateLevels(before) {
 
 // --- rendering ---
 function render() {
-  document.body.classList.toggle("readonly", !token());
   renderLeader(); renderEpics(); renderBoard();
 }
 function userOf(id) { return state.users.find(u => u.id === id); }
@@ -528,22 +467,6 @@ $("#f-delete").addEventListener("click", () => {
   $("#dlg").close(); commit(s => { s.tickets = s.tickets.filter(t => t.id !== id); }, `board: delete ${id}`);
 });
 
-// --- token dialog ---
-$("#settings").addEventListener("click", () => { $("#tok").value = ""; $("#tok-why").textContent = ""; $("#tokdlg").showModal(); });
-$("#tokdlg").addEventListener("close", () => {
-  const p = pending; pending = null;
-  if ($("#tokdlg").returnValue !== "save") return;
-  const v = $("#tok").value.trim(); if (!v) return;
-  try { localStorage.setItem("rb_token", v); } catch {}
-  toast("Token saved");
-  load(false).then(() => p && commit(p.op, p.message)).catch(err => toast(err.message));
-});
-$("#tok-clear").addEventListener("click", () => {
-  try { localStorage.removeItem("rb_token"); } catch {}
-  $("#tokdlg").close(); toast("Token forgotten"); load(false).catch(() => {});
-});
-$("#refresh").addEventListener("click", () => load(false).catch(err => { setSync("offline", "err"); toast(err.message); }));
-
 // --- toasts + confetti ---
 function toast(msg, big) {
   const el = document.createElement("div"); el.className = `toast${big ? " big" : ""}`; el.textContent = msg;
@@ -566,14 +489,8 @@ function confetti(n = 110) {
   })();
 }
 
-$("#refresh").innerHTML = ic("refresh");
-$("#settings").innerHTML = ic("key") + "Token";
-
-// --- boot: initial load, then light polling so teammates' moves appear ---
-load(false).catch(err => { setSync("offline", "err"); toast(`Couldn't load board: ${err.message}`); });
-// ponytail: polling, not push. Unauthenticated API allows 60 req/h, so viewers
-// poll slowly; ETag 304s don't count against the limit when authenticated.
-setInterval(() => { if (!document.hidden && !$("#dlg").open) load(true).catch(() => {}); }, token() ? 30000 : 120000);
+// --- boot ---
+load().catch(err => { setSync("offline", "err"); toast(`Couldn't load board: ${err.message}`); });
 </script>
 </body>
 </html>
