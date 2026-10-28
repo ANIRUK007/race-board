@@ -1,0 +1,385 @@
+{
+  "users": [
+    {
+      "id": "p1",
+      "name": "Anirudh",
+      "color": "#ff5c8a"
+    },
+    {
+      "id": "p2",
+      "name": "Player 2",
+      "color": "#3d7bff"
+    },
+    {
+      "id": "p3",
+      "name": "Player 3",
+      "color": "#18b26b"
+    }
+  ],
+  "epics": [
+    {
+      "id": "E1",
+      "title": "Infra & Dev Server",
+      "color": "#ff8a00",
+      "icon": "wrench"
+    },
+    {
+      "id": "E2",
+      "title": "Broker + Agent Core",
+      "color": "#8b5cf6",
+      "icon": "cpu"
+    },
+    {
+      "id": "E3",
+      "title": "Capability Providers",
+      "color": "#06b6d4",
+      "icon": "plug"
+    },
+    {
+      "id": "E4",
+      "title": "GUI Shell",
+      "color": "#ec4899",
+      "icon": "monitor"
+    },
+    {
+      "id": "E5",
+      "title": "Apps & Polish",
+      "color": "#22c55e",
+      "icon": "package"
+    },
+    {
+      "id": "E6",
+      "title": "Knowledge Tools",
+      "color": "#eab308",
+      "icon": "book"
+    },
+    {
+      "id": "E7",
+      "title": "Spec Fixes",
+      "color": "#ef4444",
+      "icon": "file"
+    }
+  ],
+  "tickets": [
+    {
+      "id": "T-1",
+      "epic": "E1",
+      "title": "Arch build/test VM (racedev)",
+      "desc": "Btrfs root with snapper subvolumes, key-only SSH, NetworkManager.",
+      "assignee": "p1",
+      "status": "done",
+      "committedAt": "2026-10-18T16:00:00Z",
+      "completedAt": "2026-10-18T17:20:00Z"
+    },
+    {
+      "id": "T-2",
+      "epic": "E1",
+      "title": "Tailscale-only access + clean-base snapshot",
+      "desc": "racedev on the tailnet, bootstrap port-forward removed, snapshot taken.",
+      "assignee": "p1",
+      "status": "done",
+      "committedAt": "2026-10-28T18:30:00Z",
+      "completedAt": "2026-10-28T19:00:00Z"
+    },
+    {
+      "id": "T-3",
+      "epic": "E1",
+      "title": "Deploy pipeline on Arch",
+      "desc": "deploy-sync timer pulls main every 60s; rollback on failed build. Both smoke tests pass.",
+      "assignee": "p1",
+      "status": "done",
+      "committedAt": "2026-10-18T17:00:00Z",
+      "completedAt": "2026-10-18T17:40:00Z"
+    },
+    {
+      "id": "T-4",
+      "epic": "E1",
+      "title": "Unattended Arch install script",
+      "desc": "infra/arch.sh — PR #5 open for review.",
+      "assignee": "p1",
+      "status": "testing",
+      "committedAt": "2026-10-18T15:30:00Z",
+      "completedAt": null
+    },
+    {
+      "id": "T-5",
+      "epic": "E1",
+      "title": "Retire buildvm",
+      "desc": "Old Ubuntu VM keeps hanging under Hyper-V. Delete once racedev has proven stable.",
+      "assignee": null,
+      "status": "todo",
+      "committedAt": null,
+      "completedAt": null
+    },
+    {
+      "id": "T-6",
+      "epic": "E2",
+      "title": "raced: MCP broker on Unix socket",
+      "desc": "Standard MCP over $XDG_RUNTIME_DIR/race/agent.sock + race-mcp stdio shim. PR #6.",
+      "assignee": "p1",
+      "status": "testing",
+      "committedAt": "2026-10-28T19:00:00Z",
+      "completedAt": null
+    },
+    {
+      "id": "T-7",
+      "epic": "E2",
+      "title": "fs.list / fs.read / proc.run tools",
+      "desc": "Root allowlist with symlink-escape check; proc.run is argv-only, no shell.",
+      "assignee": "p1",
+      "status": "testing",
+      "committedAt": "2026-10-28T19:00:00Z",
+      "completedAt": null
+    },
+    {
+      "id": "T-8",
+      "epic": "E2",
+      "title": "Approval tiers + audit log",
+      "desc": "Destructive calls need approval via MCP elicitation, fail closed. JSONL audit with reason.",
+      "assignee": "p1",
+      "status": "testing",
+      "committedAt": "2026-10-28T19:00:00Z",
+      "completedAt": null
+    },
+    {
+      "id": "T-9",
+      "epic": "E2",
+      "title": "Store Gemini key outside the repo",
+      "desc": "~/.config/race/gemini.env, mode 600. Repo is public.",
+      "assignee": "p1",
+      "status": "todo",
+      "committedAt": null,
+      "completedAt": null
+    },
+    {
+      "id": "T-10",
+      "epic": "E2",
+      "title": "Gemini adapter",
+      "desc": "Translate the broker's tools/list into Gemini functionDeclarations.",
+      "assignee": null,
+      "status": "todo",
+      "committedAt": null,
+      "completedAt": null
+    },
+    {
+      "id": "T-11",
+      "epic": "E2",
+      "title": "Agent loop",
+      "desc": "message → Gemini → tool call → broker → result → Gemini → reply.",
+      "assignee": null,
+      "status": "todo",
+      "committedAt": null,
+      "completedAt": null
+    },
+    {
+      "id": "T-12",
+      "epic": "E2",
+      "title": "Terminal chat client",
+      "desc": "Simple TUI. Ship point for Phase 1: an LLM talking to the machine end to end.",
+      "assignee": null,
+      "status": "todo",
+      "committedAt": null,
+      "completedAt": null
+    },
+    {
+      "id": "T-13",
+      "epic": "E3",
+      "title": "pkg.* provider + root helper",
+      "desc": "Official repos only — AUR PKGBUILDs run arbitrary code. Separate privileged helper, not raced.",
+      "assignee": null,
+      "status": "todo",
+      "committedAt": null,
+      "completedAt": null
+    },
+    {
+      "id": "T-14",
+      "epic": "E3",
+      "title": "app.* provider",
+      "desc": "Launch / focus / quit via desktop entries + compositor IPC.",
+      "assignee": null,
+      "status": "todo",
+      "committedAt": null,
+      "completedAt": null
+    },
+    {
+      "id": "T-15",
+      "epic": "E3",
+      "title": "index.* provider",
+      "desc": "plocate + ripgrep for v1.",
+      "assignee": null,
+      "status": "todo",
+      "committedAt": null,
+      "completedAt": null
+    },
+    {
+      "id": "T-16",
+      "epic": "E3",
+      "title": "ctx.* provider",
+      "desc": "Focused app, recent files, clipboard.",
+      "assignee": null,
+      "status": "todo",
+      "committedAt": null,
+      "completedAt": null
+    },
+    {
+      "id": "T-17",
+      "epic": "E3",
+      "title": "Terminal approval prompt",
+      "desc": "Client side of MCP elicitation, so destructive calls can be approved.",
+      "assignee": null,
+      "status": "todo",
+      "committedAt": null,
+      "completedAt": null
+    },
+    {
+      "id": "T-18",
+      "epic": "E4",
+      "title": "Compositor setup (niri)",
+      "desc": "Nested-in-a-window dev loop; shell changes visible in under 60s.",
+      "assignee": null,
+      "status": "todo",
+      "committedAt": null,
+      "completedAt": null
+    },
+    {
+      "id": "T-19",
+      "epic": "E4",
+      "title": "Pixel command-prompt shell prototype",
+      "desc": "Shell framework depends on what the designer works in (QML vs AGS/Astal).",
+      "assignee": null,
+      "status": "todo",
+      "committedAt": null,
+      "completedAt": null
+    },
+    {
+      "id": "T-20",
+      "epic": "E4",
+      "title": "Command bar wired to the broker",
+      "desc": "Primary interaction surface talks to raced.",
+      "assignee": null,
+      "status": "todo",
+      "committedAt": null,
+      "completedAt": null
+    },
+    {
+      "id": "T-21",
+      "epic": "E4",
+      "title": "Visual identity kit",
+      "desc": "gui/colors/palette.json as single source; icon theme, fonts, cursors, terminal scheme.",
+      "assignee": null,
+      "status": "todo",
+      "committedAt": null,
+      "completedAt": null
+    },
+    {
+      "id": "T-22",
+      "epic": "E4",
+      "title": "Notifications + clipboard",
+      "desc": "mako + wl-clipboard/cliphist.",
+      "assignee": null,
+      "status": "todo",
+      "committedAt": null,
+      "completedAt": null
+    },
+    {
+      "id": "T-23",
+      "epic": "E5",
+      "title": "Theme existing native apps",
+      "desc": "File manager, editor, terminal — adapt, don't build.",
+      "assignee": null,
+      "status": "todo",
+      "committedAt": null,
+      "completedAt": null
+    },
+    {
+      "id": "T-24",
+      "epic": "E5",
+      "title": "Habit memory (SQLite)",
+      "desc": "Last file, frequent apps, usage patterns.",
+      "assignee": null,
+      "status": "todo",
+      "committedAt": null,
+      "completedAt": null
+    },
+    {
+      "id": "T-25",
+      "epic": "E5",
+      "title": "Convomap prototype",
+      "desc": "Filesystem-linked note graph.",
+      "assignee": null,
+      "status": "todo",
+      "committedAt": null,
+      "completedAt": null
+    },
+    {
+      "id": "T-26",
+      "epic": "E5",
+      "title": "Workflow automation",
+      "desc": "flow.* — agent-authored flows.",
+      "assignee": null,
+      "status": "todo",
+      "committedAt": null,
+      "completedAt": null
+    },
+    {
+      "id": "T-27",
+      "epic": "E5",
+      "title": "Council of Agents",
+      "desc": "Several specialised agents on one task.",
+      "assignee": null,
+      "status": "todo",
+      "committedAt": null,
+      "completedAt": null
+    },
+    {
+      "id": "T-28",
+      "epic": "E6",
+      "title": "Research agent",
+      "desc": "Multi-source search + synthesis + citations.",
+      "assignee": null,
+      "status": "todo",
+      "committedAt": null,
+      "completedAt": null
+    },
+    {
+      "id": "T-29",
+      "epic": "E6",
+      "title": "Paper Finder",
+      "desc": "Discover papers and sort them into buckets.",
+      "assignee": null,
+      "status": "todo",
+      "committedAt": null,
+      "completedAt": null
+    },
+    {
+      "id": "T-30",
+      "epic": "E6",
+      "title": "Document format converter",
+      "desc": "Any-to-any via pandoc.",
+      "assignee": null,
+      "status": "todo",
+      "committedAt": null,
+      "completedAt": null
+    },
+    {
+      "id": "T-31",
+      "epic": "E7",
+      "title": "Replace RAID 10 with Btrfs dup + scrub + restic",
+      "desc": "RAID 10 needs 4+ disks; a laptop has one.",
+      "assignee": null,
+      "status": "todo",
+      "committedAt": null,
+      "completedAt": null
+    },
+    {
+      "id": "T-32",
+      "epic": "E7",
+      "title": "Update RAP spec to standard MCP methods",
+      "desc": "tools/list + tools/call, risk tiers as tool annotations.",
+      "assignee": "p1",
+      "status": "todo",
+      "committedAt": null,
+      "completedAt": null
+    }
+  ]
+}
