@@ -58,6 +58,12 @@
       "title": "Spec Fixes",
       "color": "#ef4444",
       "icon": "file"
+    },
+    {
+      "id": "E8",
+      "title": "Documentation",
+      "color": "#0f766e",
+      "icon": "pen"
     }
   ],
   "tickets": [
@@ -377,6 +383,136 @@
       "title": "Update RAP spec to standard MCP methods",
       "desc": "tools/list + tools/call, risk tiers as tool annotations.",
       "assignee": "p1",
+      "status": "todo",
+      "committedAt": null,
+      "completedAt": null
+    },
+    {
+      "id": "T-33",
+      "epic": "E8",
+      "title": "Literature survey: AI agents at the OS level",
+      "desc": "Omarchy, computer-use agents, MCP desktop servers — what exists and the gap Race OS fills.",
+      "assignee": "p3",
+      "status": "todo",
+      "committedAt": null,
+      "completedAt": null
+    },
+    {
+      "id": "T-34",
+      "epic": "E8",
+      "title": "Literature survey: custom & image-based Linux distros",
+      "desc": "Arch remixes, Universal Blue/bootc, NixOS — positioning for the report.",
+      "assignee": "p2",
+      "status": "todo",
+      "committedAt": null,
+      "completedAt": null
+    },
+    {
+      "id": "T-35",
+      "epic": "E8",
+      "title": "Reading papers: computer-use agents & OSWorld",
+      "desc": "Summarise benchmarks and failure modes of desktop agents.",
+      "assignee": "p1",
+      "status": "todo",
+      "committedAt": null,
+      "completedAt": null
+    },
+    {
+      "id": "T-36",
+      "epic": "E8",
+      "title": "Reading papers: prompt injection & agent security",
+      "desc": "OWASP LLM Top 10 2026 + recent injection papers; feeds the broker threat model.",
+      "assignee": "p1",
+      "status": "todo",
+      "committedAt": null,
+      "completedAt": null
+    },
+    {
+      "id": "T-37",
+      "epic": "E8",
+      "title": "Reading papers: capability-based security",
+      "desc": "Capability systems and least privilege; justify the broker's policy tiers.",
+      "assignee": "p2",
+      "status": "todo",
+      "committedAt": null,
+      "completedAt": null
+    },
+    {
+      "id": "T-38",
+      "epic": "E8",
+      "title": "UML: Use case diagram",
+      "desc": "Actors: user, agent, broker, providers.",
+      "assignee": "p1",
+      "status": "todo",
+      "committedAt": null,
+      "completedAt": null
+    },
+    {
+      "id": "T-39",
+      "epic": "E8",
+      "title": "UML: Class diagram",
+      "desc": "Broker, Session, Providers, Audit, tool manifest.",
+      "assignee": "p3",
+      "status": "todo",
+      "committedAt": null,
+      "completedAt": null
+    },
+    {
+      "id": "T-40",
+      "epic": "E8",
+      "title": "UML: Sequence diagram",
+      "desc": "Agent → broker → provider, including the approval step for destructive calls.",
+      "assignee": "p1",
+      "status": "todo",
+      "committedAt": null,
+      "completedAt": null
+    },
+    {
+      "id": "T-41",
+      "epic": "E8",
+      "title": "UML: Activity diagram",
+      "desc": "Flow from a tool call to the audit log, including the deny paths.",
+      "assignee": "p2",
+      "status": "todo",
+      "committedAt": null,
+      "completedAt": null
+    },
+    {
+      "id": "T-42",
+      "epic": "E8",
+      "title": "UML: Component & deployment diagram",
+      "desc": "raced, race-mcp, agent core, racedev VM, Tailscale.",
+      "assignee": "p1",
+      "status": "todo",
+      "committedAt": null,
+      "completedAt": null
+    },
+    {
+      "id": "T-43",
+      "epic": "E8",
+      "title": "SRS document",
+      "desc": "Functional + non-functional requirements, scoped to Phase 1–2.",
+      "assignee": "p3",
+      "status": "todo",
+      "committedAt": null,
+      "completedAt": null
+    },
+    {
+      "id": "T-44",
+      "epic": "E8",
+      "title": "Project report draft",
+      "desc": "Chapters: intro, survey, design, implementation, evaluation vs stock Arch baseline.",
+      "assignee": "p3",
+      "status": "todo",
+      "committedAt": null,
+      "completedAt": null
+    },
+    {
+      "id": "T-45",
+      "epic": "E8",
+      "title": "Presentation slides",
+      "desc": "Faculty review deck with a live broker demo.",
+      "assignee": "p2",
       "status": "todo",
       "committedAt": null,
       "completedAt": null
